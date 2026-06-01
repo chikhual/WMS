@@ -60,9 +60,9 @@ export const authService = {
 
   /** Genera access token JWT */
   generateAccessToken(payload: JwtPayload): string {
-    return jwt.sign(payload, env.JWT_SECRET, {
-      expiresIn: env.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'],
-    });
+    // Cast explícito para compatibilidad con tipos estrictos de jsonwebtoken
+    const opts = { expiresIn: env.JWT_EXPIRES_IN } as jwt.SignOptions;
+    return jwt.sign(payload, env.JWT_SECRET, opts);
   },
 
   /** Genera refresh token opaco y lo persiste en BD */

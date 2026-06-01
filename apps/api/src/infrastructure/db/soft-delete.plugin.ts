@@ -38,7 +38,6 @@ export function softDeletePlugin(schema: Schema) {
   schema.pre('findOne', excludeDeleted);
   schema.pre('findOneAndUpdate', excludeDeleted);
   schema.pre('countDocuments', excludeDeleted);
-  schema.pre('exists', excludeDeleted);
 
   // ─── Método de instancia: softDelete ───────────────────────
   schema.methods['softDelete'] = async function (

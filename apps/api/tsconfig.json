@@ -3,6 +3,10 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
+    // exactOptionalPropertyTypes causa conflictos con los tipos de Zod,
+    // Mongoose lean() y jsonwebtoken. Desactivado en la API — se mantiene
+    // en el base para packages/shared donde sí aplica bien.
+    "exactOptionalPropertyTypes": false,
     "paths": {
       "@/*": ["./src/*"],
       "@maker-wms/shared": ["../../packages/shared/src/index.ts"],

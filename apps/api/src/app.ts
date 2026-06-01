@@ -2,24 +2,28 @@ import './config/env.js';
 
 import cors from 'cors';
 import { API_PREFIX } from '@maker-wms/shared/constants';
-import express from 'express';
+import express, { type Application } from 'express';
 import helmet from 'helmet';
 import { pino } from 'pino';
 
-import { env } from './config/env.js';
+import { env, corsOrigins } from './config/env.js';
 import { connectDB } from './infrastructure/db/connection.js';
 import { errorHandler } from './infrastructure/middleware/error-handler.js';
 
-const logger = pino({
-  name: 'app',
-  transport: env.NODE_ENV === 'development' ? { target: 'pino-pretty' } : undefined,
-});
+const logger = pino(
+  env.NODE_ENV === 'development'
+    ? { name: 'app', transport: { target: 'pino-pretty' } }
+    : { name: 'app' },
+);
 
-const app = express();
+const app: Application = express();
 
 // ─── Middleware global ───────────────────────────────────────
 app.use(helmet());
-app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
+app.use(cors({
+  origin: corsOrigins.length === 1 ? corsOrigins[0] : corsOrigins,
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

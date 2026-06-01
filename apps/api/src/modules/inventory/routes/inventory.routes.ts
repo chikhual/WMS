@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type IRouter } from 'express';
 
 import { requireAuth, requirePermission } from '../../../infrastructure/middleware/require-auth.js';
 import { resolveTenant } from '../../../infrastructure/middleware/resolve-tenant.js';
@@ -10,7 +10,7 @@ import {
   lotsHandler,
 } from '../handlers/inventory.handler.js';
 
-const router = Router();
+const router: IRouter = Router();
 
 // Todos los endpoints del módulo requieren tenant + auth
 router.use(resolveTenant, requireAuth);

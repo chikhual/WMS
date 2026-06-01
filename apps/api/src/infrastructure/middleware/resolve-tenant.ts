@@ -36,7 +36,7 @@ export async function resolveTenant(req: Request, res: Response, next: NextFunct
       return;
     }
 
-    const tenant = await Tenant.findOne({ slug, status: 'active' }).lean();
+    const tenant = await Tenant.findOne({ slug, status: 'active' });
 
     if (!tenant) {
       res.status(404).json({
@@ -48,7 +48,7 @@ export async function resolveTenant(req: Request, res: Response, next: NextFunct
     }
 
     req.tenant = tenant;
-    req.tenantId = tenant._id.toString();
+    req.tenantId = (tenant._id as unknown as { toString(): string }).toString();
     next();
   } catch (err) {
     next(err);

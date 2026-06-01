@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import { Router, type IRouter } from 'express';
 
 import { resolveTenant } from '../../../infrastructure/middleware/resolve-tenant.js';
 import { requireAuth } from '../../../infrastructure/middleware/require-auth.js';
 import { authHandler } from '../handlers/auth.handler.js';
 
-const router = Router();
+const router: IRouter = Router();
 
 // POST /api/v1/auth/login
 router.post('/login', resolveTenant, authHandler.login);

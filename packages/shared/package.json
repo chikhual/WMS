@@ -9,7 +9,8 @@
     "./schemas": "./src/schemas/index.ts",
     "./permissions": "./src/permissions/index.ts",
     "./constants": "./src/constants/index.ts",
-    "./utils": "./src/utils/index.ts"
+    "./utils": "./src/utils/index.ts",
+    "./state-machines": "./src/state-machines/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
