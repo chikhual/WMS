@@ -1,0 +1,242 @@
+# ============================================================
+# Maker WMS — .gitignore
+# ============================================================
+
+# Archivos de referencia del proyecto original (binarios/zips)
+WMS\ CM/
+gitignore.txt
+# Patrones organizados por categoría. Comentarios en español
+# explican qué hace cada bloque.
+#
+# REGLA DE ORO: si tienes duda si algo debe commitearse, pregunta.
+# Es más fácil agregar a tracking algo ignorado que sacar de
+# git history un secret commiteado por error.
+# ============================================================
+
+
+# ============================================================
+# Variables de entorno
+# ============================================================
+# Ignorar todos los archivos .env en cualquier subcarpeta.
+# La excepción `!` permite versionar los .env.example.
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+**/.env
+**/.env.local
+**/.env.development
+**/.env.production
+**/.env.test
+**/.env.*.local
+
+!.env.example
+!**/.env.example
+
+
+# ============================================================
+# Dependencias
+# ============================================================
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# Bloquear lockfiles de otros package managers — usamos pnpm.
+# Si aparece uno de estos en un PR, alguien corrió npm o yarn por error.
+package-lock.json
+yarn.lock
+
+
+# ============================================================
+# Outputs de build
+# ============================================================
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Next.js
+.next/
+.vercel/
+
+# Turborepo (por si lo agregamos después)
+.turbo/
+
+# Storybook (por si lo agregamos)
+storybook-static/
+
+
+# ============================================================
+# Expo / React Native
+# ============================================================
+.expo/
+.expo-shared/
+web-build/
+expo-env.d.ts
+
+# Carpetas nativas (generadas por `expo prebuild`)
+apps/mobile/ios/Pods/
+apps/mobile/ios/build/
+apps/mobile/ios/DerivedData/
+apps/mobile/ios/.xcode.env.local
+apps/mobile/android/build/
+apps/mobile/android/app/build/
+apps/mobile/android/.gradle/
+apps/mobile/android/local.properties
+
+# Build artifacts (los binarios finales)
+*.ipa
+*.apk
+*.aab
+
+# Configs de Firebase (van por EAS Secrets, no en repo)
+google-services.json
+GoogleService-Info.plist
+**/google-services.json
+**/GoogleService-Info.plist
+
+
+# ============================================================
+# 🔒 SECRETS Y LLAVES — JAMÁS COMMITEAR
+# ============================================================
+# Si alguno de estos aparece en `git status`, PARA y revisa.
+# Limpiar con `git filter-repo` es doloroso.
+*.jks
+*.keystore
+*.p8
+*.p12
+*.pem
+*.key
+*.mobileprovision
+*.cer
+*.pfx
+.sentryclirc
+.npmrc
+
+# Service accounts y credenciales en general
+**/service-account*.json
+**/credentials*.json
+**/firebase-adminsdk*.json
+.aws/
+.gcloud/
+
+
+# ============================================================
+# Logs
+# ============================================================
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+
+# ============================================================
+# Cache
+# ============================================================
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.prettiercache
+
+
+# ============================================================
+# Testing y coverage
+# ============================================================
+coverage/
+.nyc_output/
+*.lcov
+junit.xml
+
+
+# ============================================================
+# IDE / Editor
+# ============================================================
+# Ignoramos .vscode/* pero permitimos los archivos compartidos
+# del workspace (recomendaciones de extensiones, tareas, etc.).
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+.idea/
+*.swp
+*.swo
+*~
+
+
+# ============================================================
+# Sistema operativo
+# ============================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+
+
+# ============================================================
+# Datos locales de Docker / DB
+# ============================================================
+# Si docker-compose monta volúmenes en ./data/, no commitearlos.
+data/
+dump/
+*.rdb              # Redis dump
+mongo-data/
+redis-data/
+
+
+# ============================================================
+# Herramientas de IA (workspace local)
+# ============================================================
+# Estos archivos guardan estado de sesiones y configuración
+# local de cada developer. No deben viajar con el repo.
+.claude/
+.cursor/
+.aider*
+.continue/
+.codeium/
+.copilot/
+
+
+# ============================================================
+# Temporales y scratch
+# ============================================================
+tmp/
+temp/
+.tmp/
+.scratch/
+*.bak
+*.orig
+*.rej
+
+
+# ============================================================
+# Generados específicos del proyecto
+# ============================================================
+# Documentación auto-generada
+docs/api-generated/
+docs/typedoc/
+
+# Reportes locales
+reports/
+
+# Uploads locales en dev (si se desactiva S3 y se usa filesystem)
+uploads/
+apps/api/uploads/
