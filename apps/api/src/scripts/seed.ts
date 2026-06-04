@@ -12,6 +12,38 @@ import { ROLE_KEYS, DEFAULT_ROLE_PERMISSIONS } from '@maker-wms/shared/permissio
 
 const RESET = process.argv.includes('--reset');
 
+// ─── Credenciales del admin desde variables de entorno ────────────
+//
+// En desarrollo: usa valores por defecto si no están definidas.
+// En producción: REQUIERE que estén definidas explícitamente.
+// Nunca se imprimen en texto plano en los logs.
+//
+function resolveAdminCredentials(): { email: string; password: string } {
+  const isProduction = env.NODE_ENV === 'production';
+
+  const email = process.env['SEED_ADMIN_EMAIL'];
+  const password = process.env['SEED_ADMIN_PASSWORD'];
+
+  if (isProduction) {
+    if (!email || !password) {
+      console.error('❌ En producción, SEED_ADMIN_EMAIL y SEED_ADMIN_PASSWORD son requeridas.');
+      console.error('   Agrégalas como variables de entorno antes de correr el seed.');
+      process.exit(1);
+    }
+    if (password.length < 12) {
+      console.error('❌ SEED_ADMIN_PASSWORD debe tener al menos 12 caracteres en producción.');
+      process.exit(1);
+    }
+    return { email, password };
+  }
+
+  // Desarrollo: defaults conocidos si no se definen
+  return {
+    email: email ?? 'admin@demo.local',
+    password: password ?? 'admin123',
+  };
+}
+
 async function seed() {
   await mongoose.connect(env.MONGODB_URI);
   console.log('🔌 MongoDB conectado');
@@ -83,8 +115,7 @@ async function seed() {
   }
 
   // ─── 3. Usuario admin ────────────────────────────────────────
-  const ADMIN_EMAIL = 'admin@demo.local';
-  const ADMIN_PASSWORD = 'admin123';
+  const { email: ADMIN_EMAIL, password: ADMIN_PASSWORD } = resolveAdminCredentials();
 
   let adminUser = await User.findOne({ tenantId, email: ADMIN_EMAIL });
 
@@ -106,14 +137,13 @@ async function seed() {
       jobTitle: 'Administrador del sistema',
     });
 
-    // Asignar rol tenant-admin
     await UserRole.create({
       tenantId,
       userId: adminUser._id,
       roleId: createdRoles['tenant-admin'],
     });
 
-    console.log(`✅ Usuario admin creado: ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
+    console.log(`✅ Usuario admin creado: ${ADMIN_EMAIL} / ${'*'.repeat(ADMIN_PASSWORD.length)}`);
   } else {
     console.log(`⏭️  Usuario admin ya existe: ${ADMIN_EMAIL}`);
   }
@@ -121,8 +151,8 @@ async function seed() {
   console.log('\n🎉 Seed completado. Para hacer login:');
   console.log(`   Header:   X-Tenant-Slug: demo`);
   console.log(`   Email:    ${ADMIN_EMAIL}`);
-  console.log(`   Password: ${ADMIN_PASSWORD}`);
-  console.log(`   POST http://localhost:3000/api/v1/auth/login\n`);
+  console.log(`   Password: (la que definiste en SEED_ADMIN_PASSWORD, o "admin123" en dev)`);
+  console.log(`   POST ${env.NODE_ENV === 'production' ? 'https://maker-wmsapi-production.up.railway.app' : 'http://localhost:3000'}/api/v1/auth/login\n`);
 
   await mongoose.disconnect();
   process.exit(0);
