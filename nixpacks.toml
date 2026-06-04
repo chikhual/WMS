@@ -5,7 +5,7 @@ nixPkgs = ["nodejs_20", "nodePackages.pnpm"]
 cmds = ["pnpm install --frozen-lockfile"]
 
 [phases.build]
-cmds = ["pnpm --filter @maker-wms/api build"]
+cmds = ["pnpm --filter @maker-wms/shared build && pnpm --filter @maker-wms/api build"]
 
 [start]
 cmd = "node apps/api/dist/app.js"
