@@ -18,6 +18,13 @@ const logger = pino(
 
 const app: Application = express();
 
+// ─── Trust proxy ─────────────────────────────────────────────
+// Necesario para obtener la IP real del cliente detrás de
+// Railway, Vercel, nginx u otros proxies inversos.
+// Sin esto, req.ip siempre sería la IP del proxy y el
+// rate limiter bloquearía a todos los usuarios simultáneamente.
+app.set('trust proxy', 1);
+
 // ─── Middleware global ───────────────────────────────────────
 app.use(helmet());
 app.use(cors({
